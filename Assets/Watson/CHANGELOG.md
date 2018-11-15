@@ -1,0 +1,1 @@
+Moved to [https://github.com/watson-developer-cloud/unity-sdk/wiki/Change-Log](https://github.com/watson-developer-cloud/unity-sdk/wiki/Change-Log)
