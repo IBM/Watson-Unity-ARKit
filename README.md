@@ -8,7 +8,7 @@ When the reader has completed this Code Pattern, they will understand how to:
 
 * Add IBM Watson Speech-to-Text, Assistant, and Text-to-Speech to Unity with ARKit to create an augmented reality experience.
 
-TODO: ARCH DIAGRAM
+!["diagram"](doc/source/images/architecture.png)
 
 ## Flow
 
@@ -20,9 +20,10 @@ TODO: ARCH DIAGRAM
 6. Watson Text-to-Speech converts the text to audio and returns it to the running application on the iPhone.
 7. The application plays the audio response and waits for the next voice command.
 
+<!--
 # Watch the Video
 TODO: MAKE VIDEO
-
+-->
 
 ## Included components
 
@@ -57,8 +58,8 @@ In [IBM Cloud](https://console.ng.bluemix.net/):
 1. Create a [Speech-To-Text](https://console.ng.bluemix.net/catalog/speech-to-text/) service instance.
 2. Create an [Assistant](https://console.ng.bluemix.net/catalog/services/conversation/) service instance.
 3. Create a [Text-to-Speech](https://console.ng.bluemix.net/catalog/text-to-speech/) service instance.
-4. Once you see the services in the Dashboard, select the Assistant service you created and click the !["Launch Tool"](/doc/source/images/workspace_launch.png?raw=true) button.
-5. After logging into the Assistant Tool, click the !["Import"](/doc/source/images/import_icon.png?raw=true) button.
+4. Once you see the services in the Dashboard, select the Assistant service you created and click the !["Launch Tool"](doc/source/images/workspace_launch.png?raw=true) button.
+5. After logging into the Assistant Tool, click the !["Import"](doc/source/images/import_icon.png?raw=true) button.
 6. Import the Assistant [`voiceActivatedMotionSimple.json`](data/voiceActivatedMotionSimple.json) file located in your clone of this repository.
 
 ## 3. Building and Running
@@ -79,13 +80,13 @@ For the github version make sure you are on the develop branch.
 1. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#configuring-your-service-credentials) to create your Speech To Text, Text to Speech, and Watson Assistant services and find their credentials (using [IBM Cloud](https://console.bluemix.net)
  You can find your workspace ID by selecting the expansion menu on your assistant workspace and selecting `View details`.
 
-    !["View Details"](/doc/source/images/assistant_details.png?raw=true)
+    !["View Details"](doc/source/images/assistant_details.png?raw=true)
 
 1. In the Unity Hierarchy view, click to expand under `GroundPlane`, click `DefaultAvatar`.
 1. In the Inspector you will see Variables for `Speech To Text`, `Text to Speech`, and `Assistant` and either `CF Authentication` for the Cloud Foundry username and password, or the `IAM Authentication` if you have the IAM apikey. Since you only have only one version of these credentials, fill out only one of the two for each service.
 1. Fill out the `Speech To Text Service Url`, `Text to Speech Service Url`, the `Assistant Service Url`, the `Assistant Workspace Id`, and the `Assistant Version Date`.
 
-!["Unity Editor enter credentials"](/doc/source/images/unity_creds.png?raw=true)
+!["Unity Editor enter credentials"](doc/source/images/unity_creds.png?raw=true)
 
 1. To Build for iOS and deploy to your phone, you can _File_ -> _Build_ Settings (Ctrl + Shift +B) and click Build.
 1. When prompted you can name your build. 
@@ -97,7 +98,7 @@ For the github version make sure you are on the develop branch.
   
 # Links
 
-* TODO ADD VIDEO LINK
+<!--* TODO ADD VIDEO LINK-->
 * [Watson Unity SDK](https://github.com/IBM/unity-sdk)
 
 # Troubleshooting
