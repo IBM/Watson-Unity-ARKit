@@ -50,7 +50,7 @@ TODO: MAKE VIDEO
 ## 2. Create IBM Cloud services
 
 On your local machine:
-1. `git clone https://github.com/Amara-Keller/Watson-Unity-ARKit.git`
+1. `git clone https://github.com/IBM/Watson-Unity-ARKit.git`
 2. `cd Watson-Unity-ARKit`
 
 In [IBM Cloud](https://console.ng.bluemix.net/):
