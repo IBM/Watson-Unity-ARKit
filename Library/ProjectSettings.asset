@@ -235,7 +235,7 @@ PlayerSettings:
   iOSManualSigningProvisioningProfileType: 0
   tvOSManualSigningProvisioningProfileType: 0
   appleEnableAutomaticSigning: 1
-  iOSRequireARKit: 0
+  iOSRequireARKit: 1
   appleEnableProMotion: 0
   clonedFromGUID: 6f1c150c1d09e34438d8b828344ac6d5
   templatePackageId: 
@@ -363,7 +363,7 @@ PlayerSettings:
   enableInternalProfiler: 0
   logObjCUncaughtExceptions: 1
   enableCrashReportAPI: 0
-  cameraUsageDescription: 
+  cameraUsageDescription: Please enable the camera for AR experiences
   locationUsageDescription: 
   microphoneUsageDescription: Please enable the microphone to use voice commands.
   switchNetLibKey: 
