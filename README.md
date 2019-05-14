@@ -74,32 +74,32 @@ In [IBM Cloud](https://console.ng.bluemix.net/):
 
 Make sure you are on the 3.1.0 tagged branch.
 
-1. Download the [Unity Core SDK]() or perform the following:
+2. Download the [Unity Core SDK]() or perform the following:
 
 `git clone https://github.com/IBM/unity-sdk-core.git`
 
 Make sure you are on the 0.2.0 tagged branch.
 
-1. Open Unity and inside the project launcher select the ![Open](doc/source/images/unity_open.png?raw=true) button.
-1. If prompted to upgrade the project to a newer Unity version, do so.
-1. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#getting-the-watson-sdk-and-adding-it-to-unity) to add the Watson SDK for Unity downloaded in step 1 to the project.
-1. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#configuring-your-service-credentials) to create your Speech To Text, Text to Speech, and Watson Assistant services and find their credentials (using [IBM Cloud](https://cloud.ibm.com)
+3. Open Unity and inside the project launcher select the ![Open](doc/source/images/unity_open.png?raw=true) button.
+4. If prompted to upgrade the project to a newer Unity version, do so.
+5. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#getting-the-watson-sdk-and-adding-it-to-unity) to add the Watson SDK for Unity downloaded in step 1 to the project.
+6. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#configuring-your-service-credentials) to create your Speech To Text, Text to Speech, and Watson Assistant services and find their credentials (using [IBM Cloud](https://cloud.ibm.com)
  You can find your workspace ID by selecting the expansion menu on your assistant workspace and selecting `View details`.
 
     !["View Details"](doc/source/images/assistant_details.png?raw=true)
 
-1. In the Unity Hierarchy view, click to expand under `GroundPlane`, click `DefaultAvatar`.
-1. In the Inspector you will see Variables for `Speech To Text`, `Text to Speech`, and `Assistant` and either `CF Authentication` for the Cloud Foundry username and password, or the `IAM Authentication` if you have the IAM apikey. Since you only have only one version of these credentials, fill out only one of the two for each service.
-1. Fill out the `Speech To Text Service Url`, `Text to Speech Service Url`, the `Assistant Service Url`, the `Assistant Workspace Id`, and the `Assistant Version Date`.
+7. In the Unity Hierarchy view, click to expand under `GroundPlane`, click `DefaultAvatar`.
+8. In the Inspector you will see Variables for `Speech To Text`, `Text to Speech`, and `Assistant` and either `CF Authentication` for the Cloud Foundry username and password, or the `IAM Authentication` if you have the IAM apikey. Since you only have only one version of these credentials, fill out only one of the two for each service.
+9. Fill out the `Speech To Text Service Url`, `Text to Speech Service Url`, the `Assistant Service Url`, the `Assistant Workspace Id`, and the `Assistant Version Date`.
 
 !["Unity Editor enter credentials"](doc/source/images/unity_creds.png?raw=true)
 
-1. To Build for iOS and deploy to your phone, you can _File_ -> _Build_ Settings (Ctrl + Shift +B) and click Build.
-1. When prompted you can name your build. 
-1. When the build is completed, open the project in Xcode by clicking on `Unity-iPhone.xcodeproj`.
-1. Follow [steps](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7) to sign your app. Note - you must have an Apple Developer Account.
-1. Connect your phone via USB and select it from the target device list at the top of Xcode. Click the play button to run it.
-1. Alternately, connect the phone via USB and _File_-> _Build and Run_ (or Ctrl+B).
+10. To Build for iOS and deploy to your phone, you can _File_ -> _Build_ Settings (Ctrl + Shift +B) and click Build.
+11. When prompted you can name your build. 
+12. When the build is completed, open the project in Xcode by clicking on `Unity-iPhone.xcodeproj`.
+13. Follow [steps](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7) to sign your app. Note - you must have an Apple Developer Account.
+14. Connect your phone via USB and select it from the target device list at the top of Xcode. Click the play button to run it.
+15. Alternately, connect the phone via USB and _File_-> _Build and Run_ (or Ctrl+B).
 
   
 # Links
