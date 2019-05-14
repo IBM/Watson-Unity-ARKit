@@ -64,7 +64,7 @@ In [IBM Cloud](https://console.ng.bluemix.net/):
 
 ## 3. Building and Running
 
-> Note: This has been compiled and tested using Unity 2018.2.9f1 and Watson Unity SDK from the Unity Asset Store version v2.10.0 as of October 15, 2018 and tested with the `develop` branch of the github unity-sdk as of `commit 68f4497 Oct 10`.
+> Note: This has been compiled and tested using Unity 2018.3.0f2 and Watson SDK for Unity 3.1.0 (2019-04-09) & Unity Core SDK 0.2.0 (2019-04-09). 
 
 > Note: If you are in *any* IBM Cloud region other than US-South you *must* use Unity 2018.2 or higher. This is because Unity 2018.2 or higher is needed for TLS 1.2, which is the only TLS version available in all regions other than US-South.
 
@@ -72,39 +72,49 @@ In [IBM Cloud](https://console.ng.bluemix.net/):
 
 `git clone https://github.com/watson-developer-cloud/unity-sdk.git`
 
-Make sure you are on the develop branch.
-1. Open Unity and inside the project launcher select the ![Open](doc/source/images/unity_open.png?raw=true) button.
-1. If prompted to upgrade the project to a newer Unity version, do so.
-1. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#getting-the-watson-sdk-and-adding-it-to-unity) to add the Watson Unity SDK downloaded in step 1 to the project.
-1. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#configuring-your-service-credentials) to create your Speech To Text, Text to Speech, and Watson Assistant services and find their credentials (using [IBM Cloud](https://console.bluemix.net)
+Make sure you are on the 3.1.0 tagged branch.
+
+2. Download the [Unity Core SDK]() or perform the following:
+
+`git clone https://github.com/IBM/unity-sdk-core.git`
+
+Make sure you are on the 0.2.0 tagged branch.
+
+3. Open Unity and inside the project launcher select the ![Open](doc/source/images/unity_open.png?raw=true) button.
+4. If prompted to upgrade the project to a newer Unity version, do so.
+5. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#getting-the-watson-sdk-and-adding-it-to-unity) to add the Watson SDK for Unity downloaded in step 1 to the project.
+6. Follow [these instructions](https://github.com/watson-developer-cloud/unity-sdk#configuring-your-service-credentials) to create your Speech To Text, Text to Speech, and Watson Assistant services and find their credentials (using [IBM Cloud](https://cloud.ibm.com)
  You can find your workspace ID by selecting the expansion menu on your assistant workspace and selecting `View details`.
 
     !["View Details"](doc/source/images/assistant_details.png?raw=true)
 
-1. In the Unity Hierarchy view, click to expand under `GroundPlane`, click `DefaultAvatar`.
-1. In the Inspector you will see Variables for `Speech To Text`, `Text to Speech`, and `Assistant` and either `CF Authentication` for the Cloud Foundry username and password, or the `IAM Authentication` if you have the IAM apikey. Since you only have only one version of these credentials, fill out only one of the two for each service.
-1. Fill out the `Speech To Text Service Url`, `Text to Speech Service Url`, the `Assistant Service Url`, the `Assistant Workspace Id`, and the `Assistant Version Date`.
+7. In the Unity Hierarchy view, click to expand under `GroundPlane`, click `DefaultAvatar`.
+8. In the Inspector you will see Variables for `Speech To Text`, `Text to Speech`, and `Assistant` and either `CF Authentication` for the Cloud Foundry username and password, or the `IAM Authentication` if you have the IAM apikey. Since you only have only one version of these credentials, fill out only one of the two for each service.
+9. Fill out the `Speech To Text Service Url`, `Text to Speech Service Url`, the `Assistant Service Url`, the `Assistant Workspace Id`, and the `Assistant Version Date`.
 
 !["Unity Editor enter credentials"](doc/source/images/unity_creds.png?raw=true)
 
-1. To Build for iOS and deploy to your phone, you can _File_ -> _Build_ Settings (Ctrl + Shift +B) and click Build.
-1. When prompted you can name your build. 
-1. When the build is completed, open the project in Xcode by clicking on `Unity-iPhone.xcodeproj`.
-1. Follow [steps](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7) to sign your app. Note - you must have an Apple Developer Account.
-1. Connect your phone via USB and select it from the target device list at the top of Xcode. Click the play button to run it.
-1. Alternately, connect the phone via USB and _File_-> _Build and Run_ (or Ctrl+B).
+10. To Build for iOS and deploy to your phone, you can _File_ -> _Build_ Settings (Ctrl + Shift +B) and click Build.
+11. When prompted you can name your build. 
+12. When the build is completed, open the project in Xcode by clicking on `Unity-iPhone.xcodeproj`.
+13. Follow [steps](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7) to sign your app. Note - you must have an Apple Developer Account.
+14. Connect your phone via USB and select it from the target device list at the top of Xcode. Click the play button to run it.
+15. Alternately, connect the phone via USB and _File_-> _Build and Run_ (or Ctrl+B).
 
   
 # Links
 
 <!--* TODO ADD VIDEO LINK-->
 * [Watson Unity SDK](https://github.com/IBM/unity-sdk)
+* [Unity Core SDK](https://github.com/IBM/unity-sdk-core)
 
 # Troubleshooting
 
 AR features are only available on iOS 11+ and can not run on an emulator/simulator. Be sure to check your player settings to target minimum iOS device of 11, and your Xcode deployment target (under deployment info) to be 11 also.
 
 In order to run the app you will need to sign it. Follow steps [here](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7).
+
+Mojave updates may adjust security settings and block microphone access in Unity. If Watson Speech to Text appears to be in a ready and listening state but not hearing audio, make sure to check your security settings for microphone permissions. For more information: https://support.apple.com/en-us/HT209175.
 
 # Learn more
 

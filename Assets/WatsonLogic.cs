@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using IBM.Watson.DeveloperCloud.Services.Assistant.v1;
-using IBM.Watson.DeveloperCloud.Services.SpeechToText.v1;
-using IBM.Watson.DeveloperCloud.Services.TextToSpeech.v1;
-using IBM.Watson.DeveloperCloud.Utilities;
-using IBM.Watson.DeveloperCloud.Logging;
-using IBM.Watson.DeveloperCloud.Connection;
-using FullSerializer;
-using IBM.Watson.DeveloperCloud.DataTypes;
+using IBM.Watson.Assistant.V2;
+using IBM.Watson.Assistant.V2.Model;
+using IBM.Watson.SpeechToText.V1;
+using IBM.Watson.TextToSpeech.V1;
+using IBM.Cloud.SDK;
+using IBM.Cloud.SDK.Utilities;
+using IBM.Cloud.SDK.DataTypes;
 
 public class WatsonLogic : MonoBehaviour
 {
@@ -16,55 +15,28 @@ public class WatsonLogic : MonoBehaviour
     [Header("Watson Assistant")]
     [Tooltip("The service URL (optional). This defaults to \"https://gateway.watsonplatform.net/assistant/api\"")]
     [SerializeField]
-    private string assistantURL;
+    private string AssistantURL;
     [SerializeField]
-    private string assistantWorkspace;
-    [Header("CF Authentication")]
-    [SerializeField]
-    private string assistantUsername;
-    [SerializeField]
-    private string assistantPassword;
-    [Header("IAM Authentication")]
-    [Tooltip("The IAM apikey.")]
+    private string assistantId;
+    [Tooltip("The apikey.")]
     [SerializeField]
     private string assistantIamApikey;
-    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-    [SerializeField]
-    private string assistantIamUrl;
 
     [Header("Speech to Text")]
     [Tooltip("The service URL (optional). This defaults to \"https://stream.watsonplatform.net/speech-to-text/api\"")]
     [SerializeField]
     private string SpeechToTextURL;
-    [Header("CF Authentication")]
-    [SerializeField]
-    private string SpeechToTextUsername;
-    [SerializeField]
-    private string SpeechToTextPassword;
-    [Header("IAM Authentication")]
-    [Tooltip("The IAM apikey.")]
+    [Tooltip("The apikey.")]
     [SerializeField]
     private string SpeechToTextIamApikey;
-    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-    [SerializeField]
-    private string SpeechToTextIamUrl;
 
     [Header("Text to Speech")]
     [SerializeField]
     [Tooltip("The service URL (optional). This defaults to \"https://stream.watsonplatform.net/text-to-speech/api\"")]
     private string TextToSpeechURL;
-    [Header("CF Authentication")]
-    [SerializeField]
-    private string TextToSpeechUsername;
-    [SerializeField]
-    private string TextToSpeechPassword;
-    [Header("IAM Authentication")]
-    [Tooltip("The IAM apikey.")]
+    [Tooltip("The apikey.")]
     [SerializeField]
     private string TextToSpeechIamApikey;
-    [Tooltip("The IAM url used to authenticate the apikey (optional). This defaults to \"https://iam.bluemix.net/identity/token\".")]
-    [SerializeField]
-    private string TextToSpeechIamUrl;
 
 #endregion
 
@@ -73,171 +45,114 @@ public class WatsonLogic : MonoBehaviour
     private AudioClip _recording = null;
     private int _recordingBufferSize = 2;
     private int _recordingHZ = 22050;
-    private string initialMessage = "Hello";
-    private Assistant _assistant;
-    private SpeechToText _speechToText;
-    private TextToSpeech _textToSpeech;
+    //private string initialMessage = "Hello";
+    private AssistantService _assistant;
+    private SpeechToTextService _speechToText;
+    private TextToSpeechService _textToSpeech;
+    private string sessionId;
     private bool firstMessage;
     private bool _stopListeningFlag = false;
-
-    private fsSerializer _serializer = new fsSerializer();
-
-    public Dictionary<string, object> inputObj = new Dictionary<string, object>();
+    private bool sessionCreated = false;
 
     Animator animator;
 
     //Get your services up and running
     void Awake()
     {
-        InitializeServices();
+        Runnable.Run(InitializeServices());
     }
 
     // Use this for initialization
     private void Start()
     {
+        LogSystem.InstallDefaultReactors();
         animator = gameObject.GetComponent<Animator>();
     }
 
-    private void InitializeServices()
+    private IEnumerator InitializeServices()
     {
-        Credentials asst_credentials = null;
-        if(!string.IsNullOrEmpty(assistantUsername) && !string.IsNullOrEmpty(assistantPassword)){
-            
-            //Authenticate using username and password
-            asst_credentials = new Credentials(assistantUsername, assistantPassword, assistantURL);
-            _assistant = new Assistant(asst_credentials);
-            //be sure to give it a Version Date
-            _assistant.VersionDate = "2018-09-20";
-        } else if(!string.IsNullOrEmpty(assistantIamApikey)) {
-            
-            //Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = assistantIamApikey,
-                IamUrl = assistantIamUrl
-            };
 
-            asst_credentials = new Credentials(tokenOptions, assistantURL);
-        } else {
-            throw new WatsonException("Please provide either username or password or IAM apikey to authenticate the service.");
-        }
+        Credentials asst_credentials = null;
+        TokenOptions asst_tokenOptions = new TokenOptions()
+        {
+            IamApiKey = assistantIamApikey,
+        };
+
+        asst_credentials = new Credentials(asst_tokenOptions, AssistantURL);
+
+        while (!asst_credentials.HasIamTokenData())
+            yield return null;
+
+        _assistant = new AssistantService("2019-02-08", asst_credentials);
+
+        _assistant.CreateSession(OnCreateSession, assistantId);
+
+        while (!sessionCreated)
+            yield return null;
+
 
         Credentials tts_credentials = null;
-        if(!string.IsNullOrEmpty(TextToSpeechUsername) && !string.IsNullOrEmpty(TextToSpeechPassword)){
+        TokenOptions tts_tokenOptions = new TokenOptions()
+        {
+            IamApiKey = TextToSpeechIamApikey
+        };
 
-            //Authenticate using username and password
-            tts_credentials = new Credentials(TextToSpeechUsername, TextToSpeechPassword, TextToSpeechURL);
-            _textToSpeech = new TextToSpeech(tts_credentials);
-            //give Watson a voice type
-            _textToSpeech.Voice = VoiceType.en_US_Allison;
-        } else if(!string.IsNullOrEmpty(assistantIamApikey)){
+        tts_credentials = new Credentials(tts_tokenOptions, TextToSpeechURL);
 
-            //Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = TextToSpeechIamApikey,
-                IamUrl = TextToSpeechIamUrl
-            };
+        while (!tts_credentials.HasIamTokenData())
+            yield return null;
 
-            tts_credentials = new Credentials(tokenOptions, TextToSpeechURL);
-        } else {
-            throw new WatsonException("Please provide either username or password or IAM apikey to authenticate the service.");
-        }
-
+        _textToSpeech = new TextToSpeechService(tts_credentials);
 
         Credentials stt_credentials = null;
-        if(!string.IsNullOrEmpty(SpeechToTextUsername) && !string.IsNullOrEmpty(SpeechToTextPassword)){
+        TokenOptions stt_tokenOptions = new TokenOptions()
+        {
+            IamApiKey = SpeechToTextIamApikey
+        };
 
-            //Authenticate using username and password
-            stt_credentials = new Credentials(SpeechToTextUsername, SpeechToTextPassword, SpeechToTextURL);
-            _speechToText = new SpeechToText(stt_credentials);
-        } else if(!string.IsNullOrEmpty(SpeechToTextIamApikey)){
+        stt_credentials = new Credentials(stt_tokenOptions, SpeechToTextURL);
 
-            //Authenticate using iamApikey
-            TokenOptions tokenOptions = new TokenOptions()
-            {
-                IamApiKey = SpeechToTextIamApikey,
-                IamUrl = SpeechToTextIamUrl
-            };
+        while (!stt_credentials.HasIamTokenData())
+            yield return null;
 
-            stt_credentials = new Credentials(tokenOptions, SpeechToTextURL);
-        } else {
-            throw new WatsonException("Please provide either username or password or IAM apikey to authenticate the service.");
-        }
+        _speechToText = new SpeechToTextService(stt_credentials);
+
+        Active = true;
 
         // Send first message, create inputObj w/ no context
         Message0();
-
-        Active = true;
 
         StartRecording();   // Setup recording
 
     }
 
-    //  Send a message perserving conversation context
-    private Dictionary<string, object> _context; // context to persist
-
     //  Initiate a conversation
     private void Message0()
     {
         firstMessage = true;
-        inputObj.Add("text", initialMessage);
-        MessageRequest messageRequest = new MessageRequest()
+        var input = new MessageInput()
         {
-            Input = inputObj
+            Text = "Hello"
         };
 
-        if (!_assistant.Message(OnMessage, OnFail, assistantWorkspace, messageRequest))
-            Log.Debug("ExampleAssistant.Message()", "Failed to message!");
+        _assistant.Message(OnMessage, assistantId, sessionId, input);
     }
 
 
-    private void OnMessage(object response, Dictionary<string, object> customData)
+    private void OnMessage(DetailedResponse<MessageResponse> response, IBMError error)
     {
         if (!firstMessage)
-        {    
-            Log.Debug("ExampleAssistant.OnMessage()", "Response: {0}", customData["json"].ToString());
+        {
+            //getIntent
+            string intent = response.Result.Output.Intents[0].Intent;
 
-            //  Convert resp to fsdata
-            fsData fsdata = null;
-            fsResult r = _serializer.TrySerialize(response.GetType(), response, out fsdata);
-            if (!r.Succeeded)
-                throw new WatsonException(r.FormattedMessages);
-
-            //  Convert fsdata to MessageResponse
-            MessageResponse messageResponse = new MessageResponse();
-            object obj = messageResponse;
-            r = _serializer.TryDeserialize(fsdata, obj.GetType(), ref obj);
-            if (!r.Succeeded)
-                throw new WatsonException(r.FormattedMessages);
-
-            //  Set context for next round of messaging
-            object _tempContext = null;
-            (response as Dictionary<string, object>).TryGetValue("context", out _tempContext);
-            if (_tempContext != null)
-                _context = _tempContext as Dictionary<string, object>;
-            else
-                Log.Debug("ExampleAssistant.OnMessage()", "Failed to get context");
-
-            //  Get intent
-            object tempIntentsObj = null;
-            (response as Dictionary<string, object>).TryGetValue("intents", out tempIntentsObj);
-            object tempIntentObj = (tempIntentsObj as List<object>)[0];
-
-            object tempIntent = null;
-            (tempIntentObj as Dictionary<string, object>).TryGetValue("intent", out tempIntent);
-            string intent = tempIntent.ToString();
 
             //Trigger the animation
             MakeAMove(intent);
 
 
             //get Watson Output
-            object tempOutputObj = null;
-            (response as Dictionary<string, object>).TryGetValue("output", out tempOutputObj);
-            object tempText = null;
-            (tempOutputObj as Dictionary<string, object>).TryGetValue("text", out tempText);
-            string outputText2 = (tempText as List<object>)[0].ToString();
+            string outputText2 = response.Result.Output.Generic[0].Text;
 
             
             CallTextToSpeech(outputText2);
@@ -245,13 +160,6 @@ public class WatsonLogic : MonoBehaviour
 
         firstMessage = false;
 
-    }
-
-    // Generic Failure for Watson Assistant Service
-    private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
-    {
-        Log.Debug("ExampleAssistant.OnFail()", "Response: {0}", customData["json"].ToString());
-        Log.Error("TestAssistant.OnFail()", "Error received: {0}", error.ToString());
     }
 
     private void MakeAMove(string intent)
@@ -285,27 +193,36 @@ public class WatsonLogic : MonoBehaviour
 
     private void BuildSpokenRequest(string spokenText)
     {
-        MessageRequest messageRequest = new MessageRequest()
+        var input = new MessageInput()
         {
-            Input = new Dictionary<string, object>()
-            {
-                { "text", spokenText }
-            },
-            Context = _context
+            Text = spokenText
         };
 
-        if (_assistant.Message(OnMessage, OnFail, assistantWorkspace, messageRequest))
-            Log.Debug("Assistant, Spoken Request", "Failed to message!");
+        _assistant.Message(OnMessage, assistantId, sessionId, input);
     }
 
     private void CallTextToSpeech(string outputText)
     {
         Debug.Log("Sent to Watson Text To Speech: " + outputText);
-        if (!_textToSpeech.ToSpeech(OnSynthesize, OnFail, outputText, false))
-            Log.Debug("ExampleTextToSpeech.ToSpeech()", "Failed to synthesize!");
+
+        byte[] synthesizeResponse = null;
+        AudioClip clip = null;
+
+        _textToSpeech.Synthesize(
+            callback: (DetailedResponse<byte[]> response, IBMError error) =>
+            {
+                synthesizeResponse = response.Result;
+                clip = WaveFile.ParseWAV("myClip", synthesizeResponse);
+                PlayClip(clip);
+
+            },
+            text: outputText,
+            voice: "en-US_AllisonVoice",
+            accept: "audio/wav"
+        );
     }
 
-    private void OnSynthesize(AudioClip clip, Dictionary<string, object> customData)
+    private void PlayClip(AudioClip clip)
     {
         Debug.Log("Received audio file from Watson Text To Speech");
 
@@ -335,7 +252,7 @@ public class WatsonLogic : MonoBehaviour
 
     private void OnListen()
     {
-        Log.Debug("ExampleStreaming", "Start();");
+        Log.Debug("AvatarPattern.OnListen", "Start();");
 
         Active = true;
 
@@ -365,7 +282,7 @@ public class WatsonLogic : MonoBehaviour
         }
     }
 
-    private void OnRecognize(SpeechRecognitionEvent result, Dictionary<string, object> customData)
+    private void OnRecognize(SpeechRecognitionEvent result)
     {
         if (result != null && result.results.Length > 0)
         {
@@ -412,7 +329,14 @@ public class WatsonLogic : MonoBehaviour
     {
         Active = false;
 
-        Log.Debug("ExampleStreaming", "Error! {0}", error);
+        Log.Debug("AvatarPatternError.OnError", "Error! {0}", error);
+    }
+
+    private void OnCreateSession(DetailedResponse<SessionResponse> response, IBMError error)
+    {
+        Log.Debug("AvatarPatternError.OnCreateSession()", "Session: {0}", response.Result.SessionId);
+        sessionId = response.Result.SessionId;
+        sessionCreated = true;
     }
 
     private IEnumerator RecordingHandler()
