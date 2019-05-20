@@ -5,6 +5,7 @@ Temp/
 Obj/
 UnityGenerated/
 Library/
+[Bb]uilds/
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -31,6 +32,16 @@ ExportedObj/
 .Trashes
 Icon?
 ehthumbs.db
+
+# ============ #
+# OS generated #
+# ============ #
+.gradle/
+build/
+.apk
+.ap_
+.aab
+*.log
 
 # ============== #
 # Custom Ignores #
