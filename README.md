@@ -1,10 +1,13 @@
+# WARNING: This repository is no longer maintained :warning:
+> This repository will not be updated. The repository will be kept available in read-only mode.
+
 # Build an AI Powered AR Character in Unity with AR Foundation
 
 *This pattern was originally published using ARKit and only available on iOS. With Unity introducing AR Foundation, this pattern can now run on either ARKit or ARCore depending on what device you build for.*
 
 In this Code Pattern we will use [Assistant](https://www.ibm.com/watson/developercloud/conversation.html), [Speech-to-Text](https://www.ibm.com/watson/developercloud/speech-to-text.html), and [Text-to-Speech](https://www.ibm.com/watson/developercloud/text-to-speech.html) deployed to an iPhone or an Android phone, using either ARKit or ARCore respectively, to have a voice-powered animated avatar in Unity.
 
-Augmented reality allows a lower barrier to entry for both developers and end-users thanks to framework compatibility in phones and digital eyewear. Unity's AR Foundation continues to lower the barrier for developers, allowing a single source code for a Unity project to take advantage of ARKit and ARCore. 
+Augmented reality allows a lower barrier to entry for both developers and end-users thanks to framework compatibility in phones and digital eyewear. Unity's AR Foundation continues to lower the barrier for developers, allowing a single source code for a Unity project to take advantage of ARKit and ARCore.
 
 For more information about AR Foundation, take a look at [Unity's blog](https://blogs.unity3d.com/2018/12/18/unitys-handheld-ar-ecosystem-ar-foundation-arcore-and-arkit/).
 
@@ -62,7 +65,7 @@ In [IBM Cloud](https://cloud.ibm.com/):
 1. Create a [Speech-To-Text](https://cloud.ibm.com/catalog/speech-to-text/) service instance.
 2. Create a [Text-to-Speech](https://cloud.ibm.com/catalog/text-to-speech/) service instance.
 3. Create an [Assistant](https://cloud.ibm.com/catalog/services/conversation/) service instance.
-4. Once you see the services in the Dashboard, select the Assistant service you created and click the `Launch Tool`. 
+4. Once you see the services in the Dashboard, select the Assistant service you created and click the `Launch Tool`.
     !["Launch Tool Button"](doc/source/images/workspace_launcher2.png?raw=true)
 5. After logging into the Assistant Tool, click `Create a Skill`.
     !["Create a Skill Button"](doc/source/images/create_a_skill.png?raw=true)
@@ -80,7 +83,7 @@ In [IBM Cloud](https://cloud.ibm.com/):
 
 ## 3. Building and Running
 
-> Note: This has been compiled and tested using Unity 2018.3.0f2 and Watson SDK for Unity 3.1.0 (2019-04-09) & Unity Core SDK 0.2.0 (2019-04-09). 
+> Note: This has been compiled and tested using Unity 2018.3.0f2 and Watson SDK for Unity 3.1.0 (2019-04-09) & Unity Core SDK 0.2.0 (2019-04-09).
 
 > Note: If you are in *any* IBM Cloud region other than US-South/Dallas you *must* use Unity 2018.2 or higher. This is because Unity 2018.2 or higher is needed for TLS 1.2, which is the only TLS version available in all regions other than US-South.
 
@@ -105,9 +108,9 @@ Make sure you are on the 0.2.0 tagged branch.
 
 **Please note, the following instructions include scene changes and game objects have been added or replaced for AR Foundation.**
 
-7. In the Unity Hierarchy view, click to expand under `AR Default Plane`, click `DefaultAvatar`. If you are not in the Main scene, click `Scenes` and `Main` in your Project window, then find the game objects listed above. 
+7. In the Unity Hierarchy view, click to expand under `AR Default Plane`, click `DefaultAvatar`. If you are not in the Main scene, click `Scenes` and `Main` in your Project window, then find the game objects listed above.
 8. In the Inspector you will see Variables for `Speech To Text`, `Text to Speech`, and `Assistant`. If you are using US-South or Dallas, you can leave the `Assistant URL`, `Speech to Text URL`, and `Text To Speech URL` blank, taking on the default value as shown in the WatsonLogic.cs file. If not, please provide the URL values listed on the Manage page for each service in IBM Cloud.
-9. Fill out the `Assistant Id`, `Assistant IAM Apikey`, `Speech to Text Iam Apikey`, `Text to Speech Iam Apikey`. All Iam Apikey values are your API key or token, listed under the URL on the Manage page for each service.  
+9. Fill out the `Assistant Id`, `Assistant IAM Apikey`, `Speech to Text Iam Apikey`, `Text to Speech Iam Apikey`. All Iam Apikey values are your API key or token, listed under the URL on the Manage page for each service.
 
 !["Unity Editor enter credentials"](doc/source/images/UnityEditorUpdated.png?raw=true)
 
@@ -115,7 +118,7 @@ Make sure you are on the 0.2.0 tagged branch.
 Build steps for iOS have been tested with iOS 11+ and Xcode 10.2.1.
 
 1. To Build for iOS and deploy to your phone, you can _File_ -> _Build_ Settings (Ctrl + Shift +B) and click Build.
-2. When prompted you can name your build. 
+2. When prompted you can name your build.
 3. When the build is completed, open the project in Xcode by clicking on `Unity-iPhone.xcodeproj`.
 4. Follow [steps](https://help.apple.com/xcode/mac/current/#/dev60b6fbbc7) to sign your app. Note - you must have an Apple Developer Account.
 5. Connect your phone via USB and select it from the target device list at the top of Xcode. Click the play button to run it.
@@ -130,7 +133,7 @@ Build steps for Android have been tested with Pie on a Pixel 2 device with Andro
 4. When the build is completed, install the APK on your emulator or device.
 5. Open the app to run.
 
-  
+
 # Links
 
 <!--* TODO ADD VIDEO LINK-->
